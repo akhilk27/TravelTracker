@@ -46,7 +46,8 @@ app.get("/", async (req, res) => {
   const states = await checkVisisted();
   const currentUser = await getCurrentUser();
   res.render("index2.ejs", { 
-    states: states, total: states.length,
+    states: states,
+    total: states.length,
     users: users,
     color: currentUser.color, });
 });
@@ -56,21 +57,22 @@ app.post("/add", async (req, res) => {
   const input = req.body["state"];
   const currentUser = await getCurrentUser();
 
-  try{
+  try {
     const result = await db.query(
       "SELECT state_code FROM states WHERE LOWER(state_name) LIKE '%' || $1 || '%';",
       [input.toLowerCase()]
     );
-    console.log(result)
+
+    if (result.rows.length > 0) {
       const data = result.rows[0];
       const stateCode = data.state_code;
-  
-      try{
+
+      try {
         await db.query("INSERT INTO visited_states_grp (state_code, user_id) VALUES ($1, $2)",
-          [countryCode, currentUserId]
+          [stateCode, currentUserId]
         );
         res.redirect("/");
-      } catch(err){
+      } catch (err) {
         console.log(err);
         const states = await checkVisisted();
         res.render("index2.ejs", {
@@ -79,13 +81,17 @@ app.post("/add", async (req, res) => {
           error: "This State has already been added, try again.",
         });
       }
-  } catch(err){
+    } else {
+      console.log("State not found. Redirecting to home page.");
+      res.redirect("/");
+    }
+  } catch (err) {
     console.log(err);
     const states = await checkVisisted();
     res.render("index2.ejs", {
       states: states,
       total: states.length,
-      error: "State name does not exist, try again.",
+      error: "An error occurred. Please try again.",
     });
   }
 });
