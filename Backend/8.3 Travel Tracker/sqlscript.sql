@@ -5,8 +5,9 @@ CREATE TABLE users (
 );
 
 CREATE TABLE states (
-    state_code VARCHAR(2) PRIMARY KEY,
-    state_name VARCHAR(255) NOT NULL
+    id SERIAL PRIMARY KEY,
+    state_name VARCHAR(255) NOT NULL,
+    state_code VARCHAR(2) NOT NULL
 );
 
 CREATE TABLE visited_states_grp (
