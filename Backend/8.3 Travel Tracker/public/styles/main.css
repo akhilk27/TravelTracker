@@ -15,6 +15,32 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+
+.action-form {
+  display: flex;
+  /* justify-content: space-between; */
+  margin-bottom: 20px;
+}
+
+.small-input {
+  width: calc(60% - 5px);
+}
+
+button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: teal;
+  border: 0;
+  padding: 15px;
+  color: #ffffff;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+
 .ag-canvas {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -94,6 +120,14 @@ button {
   cursor: pointer;
 }
 
+.highlight {
+  background-color: rgba(255, 255, 0, 0.5); /* Adjust the alpha (opacity) value to make the color less pale */
+}
+
+.action-form{
+  margin: 20px 0 40px;
+}
+
 .total-count {
   font-family: "Roboto", sans-serif;
   color: white;
@@ -102,6 +136,40 @@ button {
   left: 0;
   bottom: 0;
 }
+
+/* Styling for the delete user form */
+#deleteUserForm {
+  margin-top: 20px;
+}
+
+#deleteUserForm label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: white;
+}
+
+#deleteUserForm input[type="text"] {
+  width: 200px; /* Adjust the width as needed */
+  padding: 8px;
+  font-size: 14px;
+}
+
+#deleteUserForm button {
+  padding: 8px 12px;
+  background-color: #dc3545; /* Red color for delete button */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#deleteUserForm button:hover {
+  background-color: #c82333; /* Darker red color on hover */
+}
+
+
+
 
 .tab-view {
   margin: 0;

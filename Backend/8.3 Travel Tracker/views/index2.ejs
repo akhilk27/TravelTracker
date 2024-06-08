@@ -11,21 +11,68 @@
 <body>
     <form class="tab-view tab-view-height-auto" action="/user" method="post">
         <% users.forEach(function(user) { %>
-          <input type="submit" name="user" value="<%= user.id %>" id="<%= user.id %>">
-          <label for="<%= user.id %>" style="background-color: <%= user.color %>;">
-            <%= user.name %>
-          </label>
-          <% }); %>
+        <input type="submit" name="user" value="<%= user.id %>" id="<%= user.id %>">
+        <label for="<%= user.id %>" class="user-label" style="background-color: <%= user.color %>;">
+          <%= user.name %>
+        </label>
+        <% }); %>
     
-            <input type="submit" name="add" value="new" id="tab">
-            <label for="tab">Add Family Member</label>
+        <input type="submit" name="add" value="new" id="tab">
+        <label for="tab">Add Family Member</label>
     
       </form>
+    
+      <div class="action-form">
+        <form action="/add" method="post">
+          <input type="text" name="state" autofocus placeholder="<%= locals.error ? error :  'Enter state to add'%>" class="small-input">
+          <button type="submit">Add</button>
+        </form>
+        <form action="/delete-state" method="post">
+          <input type="text" name="state" autofocus placeholder="<%= locals.error ? error :  'Enter state to delete'%>" class="small-input">
+          <button type="submit">Delete</button>
+        </form>
+      </div>
 
-  <form action="/add" method="post">
-    <input type="text" name="state" autofocus placeholder="<%= locals.error ? error :  'Enter state name'%>">
-    <button type="submit">Add</button>
-  </form>
+  <% if (locals.error) { %>
+    <script>
+      alert("<%= locals.error %>");
+    </script>
+    <% } %>
+
+    <script>
+        // Get the ID of the selected user from sessionStorage
+        const selectedUserId = sessionStorage.getItem('selectedUserId');
+      
+        // Get all label elements with class "user-label"
+        const userLabels = document.querySelectorAll('.user-label');
+      
+        // Function to highlight the user label with the specified ID
+        function highlightUser(userId) {
+          userLabels.forEach(label => {
+            label.classList.remove('highlight'); // Remove highlight from all labels
+            if (label.dataset.userId === userId) {
+              label.classList.add('highlight'); // Highlight the label with the specified ID
+            }
+          });
+        }
+      
+        // Add event listener to each label
+        userLabels.forEach(label => {
+          label.addEventListener('click', () => {
+            const userId = label.dataset.userId; // Get the user ID from the data attribute
+            sessionStorage.setItem('selectedUserId', userId); // Store the selected user ID in sessionStorage
+            highlightUser(userId); // Apply highlight effect
+          });
+        });
+      
+        // Apply highlight effect for the initially selected user (if any)
+        if (selectedUserId) {
+          highlightUser(selectedUserId);
+        }
+      </script>
+      
+  
+  
 
   <section class="ag-canvas">
     <svg class="ag-canvas_svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -280,8 +327,15 @@
      />
     </svg>
   </section>
+
+  <form id="deleteUserForm" action="/delete-user" method="POST">
+    <label for="userNameToDelete">Remove user?</label>
+    <input type="text" id="userNameToDelete" name="name" placeholder="User name">
+    <button type="submit">Delete User</button>
+  </form>
+
   <h2 class="total-count">Total States: <%=total%>
-  </h2>
+</h2>
   <script>
     const state_codes = "<%= states %>".split(",") 
     console.log(typeof ("<%= states %>"))
