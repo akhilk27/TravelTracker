@@ -40,15 +40,3 @@ The Travel Tracker is a web application that allows users to track the states th
 2. Create a new database named `world`.
 3. Run the SQL scripts in `sqlscript.sql` to create the required tables.
 
-## Data Source
-
-The state data used in this project is sourced from `StateCodes1.csv`.
-
-## Credits
-
-- This project was developed by [Your Name].
-- Special thanks to [Any acknowledgments or contributors].
-
-## License
-
-[Specify the license used for the project]
