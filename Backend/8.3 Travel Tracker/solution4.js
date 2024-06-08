@@ -12,7 +12,14 @@ const db = new pg.Client({
   password: "Akhilesh@27",
   port: 5432,
 });
-db.connect();
+db.connect((err) => {
+  if (err) {
+    console.error('Database connection error:', err.stack);
+  } else {
+    console.log('Database connected');
+  }
+});
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -24,16 +31,20 @@ let users = [
   { id: 2, name: "Sreeram", color: "powderblue" },
 ];
 
-async function checkVisisted() {
-  const result = await db.query("SELECT state_code FROM visited_states_grp JOIN users ON users.id = user_id WHERE user_id = $1;",
-  [currentUserId]);
-
-  let states = [];
-  result.rows.forEach((state) => {
-    states.push(state.state_code);
-  });
-  return states;
+async function checkVisited() {
+  try {
+    const result = await db.query("SELECT state_code FROM visited_states_grp JOIN users ON users.id = user_id WHERE user_id = $1;", [currentUserId]);
+    let states = [];
+    result.rows.forEach((state) => {
+      states.push(state.state_code);
+    });
+    return states;
+  } catch (err) {
+    console.error('Error fetching visited states:', err);
+    return [];
+  }
 }
+
 
 async function getCurrentUser() {
   const result = await db.query("SELECT * FROM users");
@@ -43,7 +54,7 @@ async function getCurrentUser() {
 
 // GET home page
 app.get("/", async (req, res) => {
-  const states = await checkVisisted();
+  const states = await checkVisited();
   const currentUser = await getCurrentUser();
   res.render("index2.ejs", { 
     states: states,
@@ -74,7 +85,7 @@ app.post("/add", async (req, res) => {
         res.redirect("/");
       } catch (err) {
         console.log(err);
-        const states = await checkVisisted();
+        const states = await checkVisited();
         res.render("index2.ejs", {
           states: states,
           total: states.length,
@@ -87,7 +98,7 @@ app.post("/add", async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    const states = await checkVisisted();
+    const states = await checkVisited();
     res.render("index2.ejs", {
       states: states,
       total: states.length,
@@ -95,6 +106,7 @@ app.post("/add", async (req, res) => {
     });
   }
 });
+
 
 app.post("/user", async (req, res) => {
   if (req.body.add === "new") {
